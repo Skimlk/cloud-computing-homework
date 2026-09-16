@@ -6,4 +6,4 @@ pip install -r requirements.txt
 
 SITE_PACKAGES=$(ls -d venv/lib/python*/site-packages | sort | tail -n 1)
 
-echo "$(pwd)" > "$SITE_PACKAGES/${PWD##*/}.pth" 
+echo "$PWD" > "$SITE_PACKAGES/${PWD##*/}.pth" 
