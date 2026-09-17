@@ -1,4 +1,4 @@
-from aws_helpers import S3_CLIENT, get_buckets()
+from aws_helpers import S3_CLIENT, get_buckets
 import fnmatch
 import boto3
 
