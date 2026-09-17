@@ -28,6 +28,17 @@ S3_CLIENT = boto3.client(
 def get_buckets():
 	return S3_RESOURCE.buckets.all()
 
+def enable_public_bucket_access(bucket_name):
+	S3_CLIENT.put_public_access_block(
+		Bucket=bucket_name,
+		PublicAccessBlockConfiguration={
+			'BlockPublicAcls': False,
+			'IgnorePublicAcls': False,
+			'BlockPublicPolicy': False,
+			'RestrictPublicBuckets': False
+		}
+	)
+
 def make_str_unique(original_str):
 	unique_str = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
 	return f"{original_str}-{unique_str}"
