@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+import json
 import string
 import boto3
 import configparser
@@ -38,6 +39,22 @@ def enable_public_bucket_access(bucket_name):
 			'RestrictPublicBuckets': False
 		}
 	)
+
+	policy_payload = {
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Sid": "MakeItPublic",
+				"Effect": "Allow",
+				"Principal": "*",
+				"Action": "s3:GetObject",
+				"Resource": "arn:aws:s3:::%s/*" % bucket_name
+			}
+		]
+	}
+
+	S3_CLIENT.put_bucket_policy(Bucket=bucket_name,
+		Policy=json.dumps(policy_payload))
 
 def make_str_unique(original_str):
 	unique_str = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
