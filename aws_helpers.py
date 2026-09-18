@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import random
 import json
 import string
@@ -39,6 +40,8 @@ def enable_public_bucket_access(bucket_name):
 			'RestrictPublicBuckets': False
 		}
 	)
+
+	time.sleep(2)
 
 	policy_payload = {
 		"Version": "2012-10-17",
