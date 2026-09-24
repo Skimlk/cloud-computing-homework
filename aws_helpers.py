@@ -11,22 +11,29 @@ creds = configparser.ConfigParser()
 creds_path = '~/.aws/credentials'
 creds_read = creds.read(os.path.expanduser(creds_path))
 
+region_name = 'us-east-2'
+
 if not creds_read:
 	sys.exit(f"Could not read credentials from {creds_path}.")
 
-# Lecture 3 Slide 29
-S3_RESOURCE = boto3.resource(
-	's3',
-	aws_access_key_id=creds['default']['aws_access_key_id'],
-	aws_secret_access_key=creds['default']['aws_secret_access_key']
-)
+def create_handle(service, handle_creation_callback):
+	return handle_creation_callback(
+		service,
+		aws_access_key_id=creds['default']['aws_access_key_id'],
+		aws_secret_access_key=creds['default']['aws_secret_access_key'],
+		region_name=region_name
+	)
 
-S3_CLIENT = boto3.client(
-	's3',
-	aws_access_key_id=creds['default']['aws_access_key_id'],
-	aws_secret_access_key=creds['default']['aws_secret_access_key']
-)
+def create_resource(service):
+	return create_handle(service, boto3.resource)
 
+def create_client(service):
+	return create_handle(service, boto3.client)
+
+S3_RESOURCE = create_resource('s3')
+S3_CLIENT = create_client('s3') 
+EC2_RESOURCE = create_resource('ec2')
+ 
 def get_buckets():
 	return S3_RESOURCE.buckets.all()
 
@@ -63,4 +70,4 @@ def make_str_unique(original_str):
 	unique_str = "".join(random.choices(string.ascii_lowercase + string.digits, k=8))
 	return f"{original_str}-{unique_str}"
 
-__all__ = ['S3_RESOURCE', 'S3_CLIENT', 'get_buckets', 'make_str_unique']
+__all__ = ['S3_RESOURCE', 'S3_CLIENT', 'EC2_RESOURCE', 'get_buckets', 'make_str_unique']
