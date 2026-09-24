@@ -36,7 +36,7 @@ instances = EC2_RESOURCE.create_instances(
 	KeyName='ec2keypair',
 	SecurityGroups=['http&ssh'],
 	BlockDeviceMappings=[{"DeviceName": "/dev/xvda",
-		"Ebs" : { "VolumeSize" : 20 }}]
+		"Ebs" : { "VolumeSize" : 10 }}]
 )
 
 # Creating Tag
@@ -56,7 +56,7 @@ zone = subnet.availability_zone
 
 volume = EC2_RESOURCE.create_volume(
 	AvailabilityZone = zone,
-	Size=5)
+	Size=20)
 while EC2_RESOURCE.Volume(volume.id).state != 'available':
 	time.sleep(5)
 
